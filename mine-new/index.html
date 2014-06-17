@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Minesweeper</title>
+<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+<link rel="icon" href="/favicon.ico" type="image/x-icon">
+<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+
+</head>
+
+
+<body>
+<div class="container">
+
+    <h2> Minesweeper Game </h2>
+
+    <div class="row">
+        <div class="col-md-3  panel panel-default">
+            <div class="panel-body">
+                <div class="row">
+                    <input id="difficulty-level" value="easy" type ="hidden"/>
+                    <div class="col-md-6">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-default dropdown-toggle btn-success" data-toggle="dropdown">
+                                Board Size <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="javascript:setLevel('easy')">Easy</a></li>
+                                <li><a href="javascript:setLevel('medium')">Medium</a></li>
+                                <li><a href="javascript:setLevel('hard')">Hard</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-md-offset-2">
+                        <button  type="button" id ="bn-reset" class="btn btn-danger bn-reset" onclick = "minesweeper.restart()" name="bn-reset">Reset </button>  
+                    </div>
+                </div>
+            </div>
+            
+            <ul class="list-group">
+                <li class="list-group-item"><span class="glyphicon glyphicon-time "></span>   Timer<span class="badge"><div id="timer"></div></span></li>
+                <li class="list-group-item"><span class="glyphicon glyphicon-asterisk"></span>   Mines Remaining<span class="badge badge-danger" ><div id="remaining-mines"></div></span></li>
+            </ul>
+        </div>
+
+        <div class="col-md-9">
+            <div id="game-board" class="game-board" style="cursor:pointer">
+            </div>
+        </div>
+    </div>    
+</div>
+</div>
+
+<script src="./js/jquery.js"></script> <!-- for bootstrap -->
+<!-- <script src="./src/game.js"></script>
+<script src="./src/board.js"></script>
+<script src="./src/field.js"></script> -->
+<script type="text/javascript" src="./src/app.js"></script>
+<script src="./js/bootstrap.js"></script>
+
+<script type="text/javascript">
+
+$(document).ready(function() {
+            boardElement = $("#game-board");
+            var minesweeper = new Game(boardElement);
+            minesweeper.start();
+        });
+</script>
+
+
+<script type="text/javascript">
+/* Resetting the game difficulty level*/
+function setLevel(level){
+
+document.getElementById("difficulty-level").value = level;
+minesweeper.restart();
+
+}
+</script>
+<style type="text/css">
+
+#game-board{
+
+padding-left: 20px;
+
+
+}
+
+#game-board .row span{
+
+    width: 40px;
+    height: 40px;
+    float: left;
+    text-align: center;
+    font-size: 40px;
+    font-style: bold;
+    border-width: 1px;
+    border-color: white;
+    border-style: solid;
+}
+
+.open {
+    background-color: white;
+}
+
+.closed{
+    background-color: gray;
+    border-color: white;
+}
+
+.blast{
+    background-color: red;
+}
+
+.flag{
+
+    background-color: gray;
+}
+
+.question{
+    background-color: gray;
+}
+
+.dark {
+
+
+    background-color: gray;
+
+}
+
+
+.light{
+
+    background-color: white;
+
+}
+
+
+
+</style>
+</body></html>

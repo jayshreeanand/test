@@ -1,0 +1,47 @@
+
+
+.game-board {
+  position: relative;
+  
+}
+
+.field {
+  position: absolute;
+  overflow: hidden;
+  width:32px;
+  height:32px;
+  background: url('../img/closed.png') center left no-repeat ;
+}
+
+
+.up {
+   position: absolute;
+  overflow: hidden;
+  width:32px;
+  height:32px;
+  background: url('../img/closed.png') center left no-repeat ;
+
+}
+
+.down {
+
+ position: absolute;
+  overflow: hidden;
+  width:32px;
+  height:32px;
+  background: url('../img/0.png') center left no-repeat ;
+
+}
+
+
+.flag {
+
+ position: absolute;
+  overflow: hidden;
+  width:32px;
+  height:32px;
+  background: url('../img/flag.png') center left no-repeat ;
+
+}
+
+

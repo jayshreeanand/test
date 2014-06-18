@@ -1,5 +1,5 @@
-var Board = function(boardElement,options){
-  this.element = boardElement;
+var Board = function(options){
+  this.element = $("#game-board");
   this.rows = options[0];// first element of the options array
   this.cols = options[1];// second element of the options array
   this.mineCount = options[2]; //3rd element

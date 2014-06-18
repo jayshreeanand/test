@@ -1,5 +1,5 @@
-var Game = function(boardElement){
-  this.gameElement = boardElement;
+var Game = function(){
+
   this.timerElement  = document.getElementById("timer");
   var game = this;
 // $("#myModal").modal('show');
@@ -30,7 +30,7 @@ Game.prototype.start = function(){
   this.startTime = null;
   this.timerElement.innerHTML = "00:00";
   // this.movesArray = new Array();
-  this.board = new Board(boardElement, this.options);
+  this.board = new Board( this.options);
   // this.startTimer();
   this.enableClickListener();
 };
@@ -43,7 +43,9 @@ Game.prototype.startTimer = function(){
 
 
 Game.prototype.restart = function(){
-  this.gameElement.empty();
+  this.board.element.empty();
+  this.board.element.unbind();
+
   this.start();
 };
 Game.prototype.checkWinGame = function(){
@@ -76,18 +78,18 @@ this.endGame();
 Game.prototype.enableClickListener = function() {
   var id, typeofButton;
   var $game = this;
-    this.gameElement.contextmenu(function(e) {
+    this.board.element.contextmenu(function(e) {
     console.log("right click button pressed on id "+ e.target.id + "and button is " +e.which);
     id = e.target.id;
     typeofButton = 3; //this is a right mouse button
     e.preventDefault();
     $game.board.clickField(id, typeofButton);
     // $game.logMoves(id, typeofButton);
-
+    return; 
 });
 
 
-  this.gameElement.click(function(event) {
+  this.board.element.click(function(event) {
     if(!$game.startTime){
       $game.startTimer();
     }
@@ -112,9 +114,8 @@ if(event.which ==1){ //eliminates case for middle mouse button click
 
 Game.prototype.disableClickListener = function() {
 
-  this.gameElement.contextmenu(function(e) {
-    return false;
-  });
+
+  this.board.element.unbind();
 };
 
 

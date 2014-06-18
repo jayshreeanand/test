@@ -6,14 +6,13 @@
 <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
 <link rel="icon" href="/favicon.ico" type="image/x-icon">
 <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
-
 </head>
 
 
 <body>
 <div class="container">
 
-    <h2> Minesweeper Game </h2>
+    <h2> Chess Game </h2>
 
     <div class="row">
         <div class="col-md-3  panel panel-default">
@@ -21,7 +20,7 @@
                 <div class="row">
                     <input id="difficulty-level" value="easy" type ="hidden"/>
                     <div class="col-md-6">
-                        <div class="btn-group">
+                        <!-- <div class="btn-group">
                             <button type="button" class="btn btn-default dropdown-toggle btn-success" data-toggle="dropdown">
                                 Board Size <span class="caret"></span>
                             </button>
@@ -30,10 +29,10 @@
                                 <li><a href="javascript:setLevel('medium')">Medium</a></li>
                                 <li><a href="javascript:setLevel('hard')">Hard</a></li>
                             </ul>
-                        </div>
+                        </div> -->
                     </div>
                     <div class="col-md-3 col-md-offset-2">
-                        <button  type="button" id ="bn-reset" class="btn btn-danger bn-reset" onclick = "minesweeper.restart()" name="bn-reset">Reset </button>  
+                        <button  type="button" id ="bn-reset" class="btn btn-danger bn-reset" onclick = "chess.restart()" name="bn-reset">Reset </button>  
                     </div>
                 </div>
             </div>
@@ -45,7 +44,9 @@
         </div>
 
         <div class="col-md-9">
+
             <div id="game-board" class="game-board" style="cursor:pointer">
+                
             </div>
         </div>
     </div>    
@@ -53,32 +54,14 @@
 </div>
 
 <script src="./js/jquery.js"></script> <!-- for bootstrap -->
-<!-- <script src="./src/game.js"></script>
-<script src="./src/board.js"></script>
-<script src="./src/field.js"></script> -->
-<script type="text/javascript" src="./src/app.js"></script>
 <script src="./js/bootstrap.js"></script>
-
+<script type="text/javascript" src="./src/app.js"></script>
 <script type="text/javascript">
 
-$(document).ready(function() {
-   
-
+ $(document).ready(function() {
             boardElement = $("#game-board");
-            var minesweeper = new Game(boardElement);
-            minesweeper.start();
+            var chess = new Game(boardElement);
         });
-</script>
-
-
-<script type="text/javascript">
-/* Resetting the game difficulty level*/
-function setLevel(level){
-
-document.getElementById("difficulty-level").value = level;
-minesweeper.restart();
-
-}
 </script>
 <style type="text/css">
 
@@ -89,54 +72,15 @@ padding-left: 20px;
 
 }
 
-#game-board .row span{  
+#game-board .row span{
 
-    width: 40px;
-    height: 40px;
-    float:left;
+    width: 50px;
+    height: 50px;
+    float: left;
     text-align: center;
-    font-size: 30px;
+    font-size: 40px;
     font-style: bold;
-    border-width: 1px;
-    border-color: #DAE6E6;
-    border-style: solid;
 }
-
-.open {
-    background-color: yellow;
-    color: black;
-}
-
-.closed{
-    background-color: gray;
-    border-color: white;
-}
-
-.blast{
-    background-color: red;
-    color:black;
-}
-
-.flag{
-
-    background-color: gray;
-    color:red;
-}
-
-.cross{
-
-    background-color: gray;
-    color:red;
-}
-
-
-.question{
-    background-color: gray;
-    color:blue;
-    font-weight: bold;
-}
-
-
 
 .dark {
 
@@ -152,7 +96,31 @@ padding-left: 20px;
 
 }
 
+#board {
+    height: 800px;
+    width: 800px;
+}
+ 
+#board .column {
+    height: 100px;
+    width: 100px;
+    background: #F0FFFF;
+    float: left;
+    font-size: 90px;
+    
+
+}
+ 
+#board .column.dark {
+    background: #99CCFF;
+}
+ 
+#board .column div {
+    height: 100px;
+    width: 100px;
+}
 
 
 </style>
+  
 </body></html>

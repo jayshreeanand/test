@@ -1,10 +1,121 @@
 var Game = function(boardElement, userOptions){
 this.gameElement = boardElement;
+this.timerElement  = document.getElementById("timer");
+var game = this;
+this.movesArray = new Array();
+this.options = {
 
+	rows:10,
+	cols:10,
+	mineCount:10
+};
+this.startTime = null;
+this.timerElement.innerHTML = "00:00";
 //this.options = $.extend('',default,userOptions);
+
+
+
+    this.onMouseDown = function(e) {
+     
+      var obj = getMouseObject(e);
+      console.log("inside mouse down loop now");
+      if ( game.board.fieldIdExists(obj.id) ){
+
+        if(!game.startTime){
+            game.startTimer();
+
+
+        }
+       }
+
+    }
+
+
+
+
+    this.initTimer = function() {
+      if (game.startTime) {
+        var diff = Math.floor( ( new Date().getTime() - game.startTime) / 1000);
+        var mins = "0" + String( Math.floor(diff / 60) );
+        var secs = "0" + String(diff % 60);
+        document.getElementById("timer").innerHTML = 
+  		mins.substring(mins.length - 2) + ":" + secs.substring(secs.length - 2);
+        setTimeout(game.initTimer, 1000);
+      }
+    }
+
+    
 this.initGame();
+ // this.startTimer();
+ this.enableClickListenernew();
+
+
+
 
 };
+
+
+
+Game.prototype.enableClickListenernew = function() {
+	var id, typeofButton;
+	var $game = this;
+
+	  this.gameElement.contextmenu(function(e) {
+	  	console.log("right click buttoon pressed on id "+ e.target.id + "and button is " +e.which);
+	  	id = e.target.id;
+	  	typeofButton = 3; //this is a right mouse button
+        e.preventDefault();
+        $game.board.clickField(id, typeofButton);
+        $game.logMoves(id, typeofButton);
+
+    });
+
+	
+  this.gameElement.click(function(event) {
+
+  	if(event.which ==1){ //eliminates case for middle mouse button click
+
+  		console.log("inside enable click listener new");
+ 	 var target_el = event.target;
+   console.log("the id of the element being cicked is "+ target_el.id);
+       console.log("the mouse button being pressed is "+ event.which);
+
+       id = target_el.id;
+       typeofButton = event.which;
+        $game.board.clickField(id, typeofButton);
+        $game.logMoves(id, typeofButton);
+
+
+  	}
+  
+    });
+
+        // this.board.clickField(id, typeofButton);
+
+};
+
+
+
+  function getMouseObject(e) {
+
+    /* returns the mouse target element*/
+    return(e? e.target: window.event.srcElement);
+  }
+
+
+  Game.prototype.startTimer = function(){
+    this.startTime = new Date().getTime();
+    this.initTimer();
+
+
+  };
+    
+  Game.prototype.enableClickListener = function() {
+  	console.log("inside enable clicke listener funciton00");
+      this.board.element.onmousedown   = this.onMouseDown;
+      console.log("enable clicke listesten line 2");
+      this.board.element.oncontextmenu = function(){return false;};
+    };
 
 Game.prototype.start = function(){
 
@@ -25,6 +136,7 @@ Game.prototype.undo = function(){
 
 
 };
+
 Game.prototype.initGame = function(){
 
 this.board = new Board(boardElement, this.options);
@@ -33,11 +145,12 @@ this.board = new Board(boardElement, this.options);
 };
 
 
-var Board = function(){
+var Board = function(boardElement,options){
 this.element = boardElement;
-this.rows = 10;
-this.cols = 10;
-this.mineCount = 10;
+this.rows = options.rows;
+this.cols = options.cols;
+this.mineCount = options.mineCount;
+this.flagCount = 0;
 this.createBoard();
 this.plantMines();
 this.calculateFieldCount();	
@@ -53,6 +166,20 @@ this.openField(100);
 
 this.openField(50);
 
+this.updateRemainingMineCount();
+this.enableClickListeners();
+};
+
+Board.prototype.updateRemainingMineCount = function(){
+
+var RemMineCount = this.mineCount - this.flagCount;
+document.getElementById("remaining-mines").innerHTML = String(RemMineCount);
+return;
+
+};
+
+Board.prototype.enableClickListeners = function(){
+
 
 };
 
@@ -61,6 +188,17 @@ function genRandNoArray(){
 
 };
 
+
+Game.prototype.logMoves = function(id, typeofButton){
+this.movesArray.push([id,typeofButton]);
+console.log("the element inserted is with id"+ this.movesArray[this.movesArray.length -1][0] + " and with type of click as "+ this.movesArray[this.movesArray.length -1][1] );
+
+};
+
+Game.prototype.deleteLastMove = function(){
+
+this.movesArray.pop();
+};
 Board.prototype.openField = function(id){
 var coord = this.getRowColFromId(id);
 var row = coord.row;
@@ -146,7 +284,7 @@ for(var i =1; i <= this.rows; i++){
 			
 			row = i + neighbours[z][0];
 			col = j + neighbours[z][1];
-			if((row >0 && row <=this.rows ) &&(col>0 && col <= this.cols)){
+			if(this.fieldExists(row,col)){ //check if a field with that particular coordinates fieldExists
 			console.log("neighbour cell "+ z + " is" + "row col "+ row +":"+ col);
 
 				if(this.field[row][col].isMine()){
@@ -188,6 +326,37 @@ for(var i = 1; i <= this.rows; i++){
 
 };
 
+Board.prototype.clickField	= function(id, typeofButton){
+
+if(typeofButton ==1 ){ //left click
+this.openField(id);
+
+}
+else if(typeofButton ==3 ){
+coord = this.getRowColFromId(id);
+this.field[coord.row][coord.col].updateFieldView("flag");
+
+}
+
+};
+Board.prototype.fieldExists = function(row,col){
+
+			if((row >0 && row <=this.rows ) &&(col>0 && col <= this.cols)){
+				return true;
+			}
+			return false;
+
+
+};
+
+Board.prototype.fieldIdExists = function(id){
+var maxId = this.getIdFromRowCol(this.rows,this.cols);
+if(id >0 && id <= maxId){
+	return true;
+}
+return false;
+
+};
 
 var Field = function(row,col,rows,cols){
 	this.row = row;
@@ -221,6 +390,8 @@ return (((row-1) * totalRows) + col);
 //check here id should be between 1 and totalfields
 
 };
+
+
 
 Board.prototype.getRowColFromId = function(id){
 var col, row;

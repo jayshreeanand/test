@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Chess App</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="">
+        <meta name="author" content="">
+<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    </head>
+
+    <body>
+        
+            <div class="container">
+              
+                <div class="btn-toolbar pull-right">
+                    <div class="btn-group">
+                        <a href="#" class="btn btn-info" data-action="reset-game">Reset Game</a>
+                    </div>
+                   
+                </div>
+                <div class="btn-group">
+                        <a href="#color-modal" class="btn btn-info dropdown-toggle" data-toggle="modal">Options</a>
+                        <div id="color-modal" class="modal hide fade">
+                            <div class="modal-header">
+                                <h3>Choose your color </h3>
+                            </div>
+                            <div class="modal-body">
+                                <center>
+                                    <a href="#" class="player-color btn btn-success" data-action="change-color" data-color='white' > White </a>
+                                    <a href="#" class="player-color btn" data-action="change-color" data-color='black'> Black </a>
+                                    
+                                </center>
+                            </div>
+                            <div class="modal-footer">
+                                <a class="btn btn-danger" data-dismiss="modal"> Cancel </a>
+                            </div>
+                        </div>
+                    </div>
+                <div class="container">
+
+                <h3 class="title">Chess App</h3>
+                <hr>
+              
+                </div>
+              <div id="board">
+
+               <div class="" id="game-board">
+               <div class="row">
+
+                <span class="dark" id="1" data-color="w" data-piece="p">♔</span>
+                <span class="dark" id="1" data-color="w" data-piece="p">♔</span>
+                <span class="dark" id="1" data-color="w" data-piece="p">♔</span>
+                <span class="dark" id="1" data-color="w" data-piece="p">♔</span>
+                <span class="dark" id="1" data-color="w" data-piece="p">♔</span>
+                <span class="dark" id="1" data-color="w" data-piece="p">♔</span>
+                <span class="dark" id="1" data-color="w" data-piece="p">♔</span>
+                <span class="dark" id="1" data-color="w" data-piece="p">♔</span>
+
+
+
+
+               </div>
+               <div class="row"></div>
+
+
+
+               </div> 
+
+              </div>
+
+        
+       
+    </body>
+
+    <script src="./js/jquery.js"></script>
+    <script src="./js/jquery-ui-custom.min.js"></script>
+    <script src="./js/bootstrap.js"></script>
+
+<style type="text/css">
+
+#game-board{
+
+width: 800px;
+height: 800px;
+
+
+}
+
+#game-board.row.span{
+
+    width: 100px;
+    height: 100px;
+    float: left;
+}
+
+.dark {
+
+
+    background-color: blue;
+}
+
+
+
+
+#board {
+    height: 800px;
+    width: 800px;
+}
+ 
+#board .column {
+    height: 100px;
+    width: 100px;
+    background: #F0FFFF;
+    float: left;
+    font-size: 90px;
+
+}
+ 
+#board .column.dark {
+    background: #99CCFF;
+}
+ 
+#board .column div {
+    height: 100px;
+    width: 100px;
+}
+
+
+</style>
+  
+    
+</html>

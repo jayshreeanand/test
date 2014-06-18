@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Connect Four Game Demo</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="">
+        <meta name="author" content="">
+
+        <!-- Le styles -->
+        <link href="./css/bootstrap.css" rel="stylesheet">
+        <link href="./css/app.css" rel="stylesheet">
+    </head>
+
+    <body>
+        <div id="wrap">
+            <div class="container-special">
+              <div class="masthead">
+                <div class="btn-toolbar pull-right">
+                    <div class="btn-group">
+                        <a href="#" class="btn btn-success" data-action="new-game">New Game</a>
+                    </div>
+                    <div class="btn-group">
+                        <a href="#size-modal" class="btn btn-info dropdown-toggle" data-toggle="modal">Change Board Size</a>
+                        <div id="size-modal" class="modal hide fade">
+                            <div class="modal-header">
+                                <h3>Choose Board size </h3>
+                            </div>
+                            <div class="modal-body">
+                                <center>
+                                    <a href="#" class="board-size btn btn-primary" data-action="resize-board" data-rows='6' data-cols='7'> Default: 7 x 6 </a>
+                                    <a href="#" class="board-size btn" data-action="resize-board" data-rows='7' data-cols='8'> 8 x 7 </a>
+                                    <a href="#" class="board-size btn" data-action="resize-board" data-rows='7' data-cols='9'> 9 x 7 </a>
+                                    <a href="#" class="board-size btn" data-action="resize-board" data-rows='7' data-cols='10'> 10 x 7 </a>
+                                </center>
+                            </div>
+                            <div class="modal-footer">
+                                <a class="btn btn-danger" data-dismiss="modal"> Cancel </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 class="logo">Game of Connect Four</h3>
+                <hr>
+              </div>
+
+              <div id="board-widget">
+              </div>
+
+            </div> <!-- /container -->
+            <div id="push"></div>
+        </div>
+
+        <div id="footer"></div>
+    </body>
+
+    <script src="./js/jquery.js"></script>
+    <script src="./js/jquery-ui-custom.min.js"></script>
+    <script src="./js/bootstrap.js"></script>
+    <script src="./js/swig.min.js"></script>
+
+    <script src="./src/player.js"></script>
+    <script src="./src/cell.js"></script>
+    <script src="./src/board.js"></script>
+    <script src="./src/board_view.js"></script>
+    <script src="./src/app.js"></script>
+
+    <script type="text/x-swig-template" id="board-template">
+        <div class="well">
+            <div id="current-player">
+            </div>
+        </div>
+
+        <div>
+            {% for row_number, row in cells %}
+                {% if loop.first %}
+                    <div class="insert-row">
+                        {% for column_number, column in row %}
+                        <div class="cell" data-insert-column="{{ column_number }}" style="position: relative">
+                            <div class="arrow" style="position: absolute"></div>
+                        </div>
+
+                        {% endfor %}
+                    </div>
+                    <div class="board">
+                {% endif %}
+
+                <div class="row">
+                    {% set row_number = cells.length - row_number - 1 %}
+                    {% for column_number, column in row %}
+                        <div class="cell" data-row="{{ row_number }}" data-column="{{ column_number }}"></div>
+                    {% endfor %}
+                </div>
+
+                {% if loop.last %}
+                    </div> <!-- .board -->
+                {% endif %}
+            {% endfor %}
+        </div>
+    </script>
+
+    <script type="text/x-swig-template" id="current-player-template">
+        <center> <h3> Current Player: {{ player.getName() }} </h3> <div class="cell {{ player.getColor() }}"></div> </center>
+    </script>
+
+    <script type="text/x-swig-template" id="winner-template">
+        <center>
+            <div class="cell {{ winner.color }}"> </div>
+            <div class="player-name"> <h3>{{ winner.name }} wins the game! </h3> </div>
+        </center>
+    </script>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            board_el = $("#board-widget");
+            window.app = new ConnectFourApp(board_el);
+        });
+    </script>
+</html>

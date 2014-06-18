@@ -1,0 +1,117 @@
+html,
+body {
+  height: 100%;
+ }
+
+body {
+  margin-top: 10px;
+  color: #333;
+  font-family: "Clear Sans", "Helvetica Neue", Arial, sans-serif;
+}
+
+.container-main {
+  min-width: 600px;
+  max-width: 800px;
+  width: auto;
+  margin: 0 auto;
+}
+
+.title {
+  font-size: 35px;
+  color: #666;
+}
+
+
+#wrap {
+  min-height: 100%;
+  height: auto !important;
+  height: 100%;
+   margin: 0 auto -60px;
+}
+
+
+#footer {
+  height: 60px;
+}
+
+ 
+
+.board {
+  background: #bbada0;
+  border-radius: 10px;
+  padding: 25px ;
+
+}
+
+
+
+
+
+/*chess board css here*/
+
+.wK{
+  background: url('../img/wK.png') no-repeat;
+} 
+
+.wQ{
+background: url('../img/wQ.png') no-repeat;
+}
+.wB{
+background: url('../img/wB.png') no-repeat;
+}
+.wN{
+background: url('../img/wN.png') no-repeat;
+}
+.wR{
+background: url('../img/wR.png') no-repeat;
+}
+.wP{
+background: url('../img/wP.png') no-repeat;
+}
+
+
+
+.bK{
+  background: url('../img/bK.png') no-repeat;
+}
+
+.bQ{
+background: url('../img/bQ.png') no-repeat;
+}
+.bB{
+background: url('../img/bB.png') no-repeat;
+}
+.bN{
+background: url('../img/bN.png') no-repeat;
+}
+.bR{
+background: url('../img/bR.png') no-repeat;
+}
+.bP{
+background: url('../img/bP.png') no-repeat;
+}
+.EMPTY{
+background: none;
+}
+#board {
+    height: 800px;
+    width: 800px;
+}
+ 
+#board .column {
+    height: 100px;
+    width: 100px;
+    background: #F0FFFF;
+    float: left;
+    font-size: 90px;
+
+}
+ 
+#board .column.dark {
+    background: #99CCFF;
+}
+ 
+#board .column div {
+    height: 100px;
+    width: 100px;
+}

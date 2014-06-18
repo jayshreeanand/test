@@ -1,0 +1,11 @@
+Write a simple implementation of the Connect Four game that works in a web browser.
+
+When a user opens the page in their browser, it should display a game board and indicate which player (e.g. red player) takes the turn. Players take turns using a single browser window (no server-side code needed). When one of the players wins, the page should indicate the winner, the game ends and no more moves can be made.
+
+Things to keep in mind:
+
+Keep the code light. You can use basic JavaScript libraries (jQuery/Zepto) though.
+You don't need to spend too much time on the UI. It's enough if it's playable, doesn't have to be pretty.
+Try to write the code in such a way that it's modular and easily testeable (you can do a bit of TDD too), e.g. try to separate the game board logic from the UI.
+It should be playable on modern mobile browsers (Chrome, Safari).
+Start simple and leave improvements for later. You should be able to have something working in 2-3 hours.

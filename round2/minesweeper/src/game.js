@@ -1,7 +1,6 @@
 
   var Game = function() {
     var game = this;
-    this.movesArray = new Array();
       this.startTime = null;
   // this.board = new Board(10,10,10);
    
@@ -42,15 +41,6 @@
     
   }
 
-Game.prototype.logMoves = function(){
-this.movesArray.push([id,typeOfClick]);
-
-};
-
-Game.prototype.deleteLastMove = function(){
-
-this.movesArray.pop();
-};
 
   Game.prototype.start = function() {
        this.createBoard();

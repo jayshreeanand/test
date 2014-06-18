@@ -6,7 +6,7 @@
 <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
 <link rel="icon" href="/favicon.ico" type="image/x-icon">
 <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
-
+<link href="./css/app.css" rel="stylesheet">
 </head>
 
 
@@ -53,21 +53,14 @@
 </div>
 
 <script src="./js/jquery.js"></script> <!-- for bootstrap -->
-<!-- <script src="./src/game.js"></script>
+<script src="./src/game.js"></script>
 <script src="./src/board.js"></script>
-<script src="./src/field.js"></script> -->
-<script type="text/javascript" src="./src/app.js"></script>
+<script src="./src/field.js"></script>
 <script src="./js/bootstrap.js"></script>
 
 <script type="text/javascript">
-
-$(document).ready(function() {
-   
-
-            boardElement = $("#game-board");
-            var minesweeper = new Game(boardElement);
-            minesweeper.start();
-        });
+var minesweeper = new Game();
+minesweeper.start();  //initializing the game
 </script>
 
 
@@ -80,79 +73,5 @@ minesweeper.restart();
 
 }
 </script>
-<style type="text/css">
 
-#game-board{
-
-padding-left: 20px;
-
-
-}
-
-#game-board .row span{  
-
-    width: 40px;
-    height: 40px;
-    float:left;
-    text-align: center;
-    font-size: 30px;
-    font-style: bold;
-    border-width: 1px;
-    border-color: #DAE6E6;
-    border-style: solid;
-}
-
-.open {
-    background-color: yellow;
-    color: black;
-}
-
-.closed{
-    background-color: gray;
-    border-color: white;
-}
-
-.blast{
-    background-color: red;
-    color:black;
-}
-
-.flag{
-
-    background-color: gray;
-    color:red;
-}
-
-.cross{
-
-    background-color: gray;
-    color:red;
-}
-
-
-.question{
-    background-color: gray;
-    color:blue;
-    font-weight: bold;
-}
-
-
-
-.dark {
-
-
-    background-color: gray;
-
-}
-
-
-.light{
-
-    background-color: white;
-
-}
-
-
-
-</style>
 </body></html>

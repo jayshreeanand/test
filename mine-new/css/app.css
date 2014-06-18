@@ -1,47 +1,74 @@
 
-
-.game-board {
-  position: relative;
-  
+#game-board{
+padding-left: 20px;
 }
 
-.field {
-  position: absolute;
-  overflow: hidden;
-  width:32px;
-  height:32px;
-  background: url('../img/closed.png') center left no-repeat ;
-}
-
-
-.up {
-   position: absolute;
-  overflow: hidden;
-  width:32px;
-  height:32px;
-  background: url('../img/closed.png') center left no-repeat ;
+#game-board .row span{  
+    width: 30px;
+    height: 30px;
+    float:left;
+    text-align: center;
+    font-size: 23px;
+    font-style: bold;
+    border-width: 1px;
+    border-color: #DAE6E6;
+    border-style: solid;
 
 }
 
-.down {
+.open {
+    background-color: yellow;
+    color: black;
+}
 
- position: absolute;
-  overflow: hidden;
-  width:32px;
-  height:32px;
-  background: url('../img/0.png') center left no-repeat ;
+.closed{
+    background-color: gray;
+    border-color: #DAE6E6;
+}
 
+.blast{
+    background-color: red;
+    color:black;
+}
+
+.flag{
+
+    background-color: gray;
+    color:red;
+}
+
+.cross{
+
+    background-color: gray;
+    color:red;
 }
 
 
-.flag {
-
- position: absolute;
-  overflow: hidden;
-  width:32px;
-  height:32px;
-  background: url('../img/flag.png') center left no-repeat ;
-
+.question{
+    background-color: gray;
+    color:blue;
+    font-weight: bold;
 }
 
 
+.one{
+    background-color:#CCCCCC;
+
+    color:blue;
+}
+
+.two{
+    background-color:#CCCCCC;
+    color: green;
+
+}
+
+.number{
+    background-color:#CCCCCC;
+    color: red;
+}
+
+.hollow{
+    background-color:#CCCCCC;
+    color: black;
+}

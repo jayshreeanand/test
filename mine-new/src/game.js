@@ -1,190 +1,169 @@
+var Game = function(boardElement){
+  this.gameElement = boardElement;
+  this.timerElement  = document.getElementById("timer");
+  var game = this;
+$("#myModal").modal('show');
+  this.initTimer = function() {
+    if (game.startTime) {
+      var diff = Math.floor( ( new Date().getTime() - game.startTime) / 1000);
+      var mins = "0" + String( Math.floor(diff / 60) );
+      var secs = "0" + String(diff % 60);
+      document.getElementById("timer").innerHTML = 
+      mins.substring(mins.length - 2) + ":" + secs.substring(secs.length - 2);
+      setTimeout(game.initTimer, 1000);
+    }
+  }
+};
 
-  var Game = function() {
-    var game = this;
-    this.movesArray = new Array();
-      this.startTime = null;
-  // this.board = new Board(10,10,10);
-   
-
-    this.onMouseDown = function(e) {
-     
-      var obj = getMouseObject(e);
-      if ( game.board.isField(obj) ){
-
-        if(!game.startTime){
-            game.startTimer();
+Game.prototype.start = function(){
 
 
-        }
-        if ( getMouseButton(e) == 1)
-          game.onLeftClick(obj.rowId, obj.colId);
-        else
-          game.onRightClick(obj.rowId, obj.colId);
-      }
-      game.updateRemainingMinesCount();
-      return false;
+  this.options = this.getUserOptions();
+  console.log("saving to local storage" + "rows "+ this.options[0] + "mine count" + this.options[2] );
+  var abc = JSON.stringify(this.options);
+  localStorage.setItem("game-data",abc);
+  console.log("abc is this"+ abc);
+  var xyz = localStorage.getItem("game-data");
+  console.log("xyz is this" + xyz);
+  var pqr = xyz;
+  console.log("pqr is this "+ pqr);
+  this.startTime = null;
+  this.timerElement.innerHTML = "00:00";
+  // this.movesArray = new Array();
+  this.board = new Board(boardElement, this.options);
+  // this.startTimer();
+  this.enableClickListener();
+};
+
+Game.prototype.startTimer = function(){
+  this.startTime = new Date().getTime();
+  this.initTimer();
+};
+
+
+
+Game.prototype.restart = function(){
+  this.gameElement.empty();
+  this.start();
+};
+Game.prototype.checkWinGame = function(){
+  if(this.board.matchFlagsMines){
+    this.winGame();
+
+  }
+};
+
+Game.prototype.endGame =function(){
+  this.stopTimer();
+  this.disableClickListener();
+}
+
+Game.prototype.gameOver = function(row,col){
+//loose game message here
+window.setTimeout(function() { window.alert ('Game Over!');}, 100);
+this.endGame();
+}
+
+
+Game.prototype.winGame = function() {
+//win game message here
+window.setTimeout(function() { window.alert ('You Win!');}, 100);
+this.board.showFlags();
+this.endGame();
+};
+
+
+Game.prototype.enableClickListener = function() {
+  var id, typeofButton;
+  var $game = this;
+    this.gameElement.contextmenu(function(e) {
+    console.log("right click button pressed on id "+ e.target.id + "and button is " +e.which);
+    id = e.target.id;
+    typeofButton = 3; //this is a right mouse button
+    e.preventDefault();
+    $game.board.clickField(id, typeofButton);
+    // $game.logMoves(id, typeofButton);
+
+});
+
+
+  this.gameElement.click(function(event) {
+    if(!$game.startTime){
+      $game.startTimer();
     }
 
 
+if(event.which ==1){ //eliminates case for middle mouse button click
+  var target_el = event.target;
+  console.log("the id of the element being cicked is "+ target_el.id +" mouse button is" + event.which);
+  id = target_el.id;
+  typeofButton = event.which;
+  $game.board.clickField(id, typeofButton);
+  // $game.logMoves(id, typeofButton);
 
-    this.initTimer = function() {
-      if (game.startTime) {
-        var diff = Math.floor( ( new Date().getTime() - game.startTime) / 1000);
-        var mins = "0" + String( Math.floor(diff / 60) );
-        var secs = "0" + String(diff % 60);
-        document.getElementById("timer").innerHTML = 
-  		mins.substring(mins.length - 2) + ":" + secs.substring(secs.length - 2);
-        setTimeout(game.initTimer, 1000);
-      }
-    }
+}
 
-    
-    
+});
+
+// this.board.clickField(id, typeofButton);
+
+};
+
+
+Game.prototype.disableClickListener = function() {
+
+  this.gameElement.contextmenu(function(e) {
+    return false;
+  });
+};
+
+
+Game.prototype.stopTimer = function(){
+
+  this.startTime = null;
+
+}
+
+Game.prototype.getUserOptions = function(){
+  var difficulty = document.getElementById("difficulty-level").value;
+
+  switch(difficulty){
+
+    case "easy":
+    return [10,10,10]
+    break;
+
+    case "medium":
+    return [15,15,50]
+
+    break;
+
+    case "hard":
+    return [18,25,75];
+
+    break;
+
+    default:
+    return  [10,10,10];
+
+    break;
+
   }
 
-Game.prototype.logMoves = function(){
-this.movesArray.push([id,typeOfClick]);
+};
+
+
+
+
+
+/*Game.prototype.logMoves = function(id, typeofButton){
+  this.movesArray.push([id,typeofButton]);
+  console.log("the element inserted is with id"+ this.movesArray[this.movesArray.length -1][0] + " and with type of click as "+ this.movesArray[this.movesArray.length -1][1] );
 
 };
 
 Game.prototype.deleteLastMove = function(){
 
-this.movesArray.pop();
+  this.movesArray.pop();
 };
-
-  Game.prototype.start = function() {
-       this.createBoard();
-      this.enableClickListener();
-      this.updateRemainingMinesCount();
-       document.getElementById("timer").innerHTML ="00:00";
-
-    };
-    Game.prototype.restart = function() {
-      this.board.destroyView();
-      this.start();
-    };
-
-    Game.prototype.createBoard = function() {
-
-      this.difficulty = document.getElementById("difficulty-level").value;
-
-       switch( this.difficulty ) {
-         case "easy"    :
-           this.board = new Board(10, 10,  10);
-           break;
-         case "medium":
-            this.board = new Board(15, 15,  50);
-            break;
-         case "hard": 
-            this.board = new Board(18, 25,  75); 
-            break;
-       }
-    };
-
-     
-
-
-  /*
-  Click handlers here
-
-  */
-  Game.prototype.enableClickListener = function() {
-      this.board.boardElement.onmousedown   = this.onMouseDown;
-      this.board.boardElement.oncontextmenu = function(){return false;};
-    };
-    Game.prototype.disableClickListener = function() {
-      this.board.boardElement.onmousedown = null;
-    };
-
-    Game.prototype.onLeftClick = function(row, col) {
-      if ( this.board.isFlag(row, col) )
-        return;
-      if ( this.board.isMine(row, col) ) {
-        this.gameOver(row, col);
-        return;
-      }
-      this.board.clickField(row, col);
-      if (0 == this.board.noMineFields)
-        this.winGame();
-    };
-   
-
-   Game.prototype.onRightClick = function(row, col) {
-      if ( this.board.isOpen(row, col) )
-        return;
-      this.board.changeStatus(row, col);
-      if (this.board.flags == this.board.mineCount)
-        this.testWinGame();
-    }
-   
-  Game.prototype.testWinGame = function(){
-
-    if(this.board.matchFlagsMines()){
-      this.winGame();
-
-    }
-  }
-
-  Game.prototype.winGame = function() {
-  //win game message here
-  window.setTimeout(function() { window.alert ('You Win!');}, 100);
-  this.board.showFlags();
-  this.endGame();
-
-
-  }
-
-  Game.prototype.gameOver = function(row,col){
-  //loose game message here
-    window.setTimeout(function() { window.alert ('Game Over!');}, 100);
-    this.board.traverseMines(row,col);
-    this.endGame();
-
-  }
-
-
-  Game.prototype.endGame =function(){
-
-  this.stopTimer();
-  this.disableClickListener();
-  }
-
-
-  Game.prototype.updateRemainingMinesCount = function() {
-
-    document.getElementById("remaining-mines").innerHTML = String(this.board.mineCount - this.board.flags);
-  }
-
-  Game.prototype.startTimer = function(){
-    this.startTime = new Date().getTime();
-    this.initTimer();
-
-
-  }
-
-  Game.prototype.stopTimer = function(){
-
-  this.startTime = null;
-
-  }
-
-
-
-  function generateRandomNumber(max) {
-
-  /* returns a number between 0 and max*/
-
-    return( Math.floor( Math.random() * max ) );
-  }
-
-  function getMouseObject(e) {
-
-    /* returns the mouse target element*/
-    return(e? e.target: window.event.srcElement);
-  }
-  function getMouseButton(e) {
-    /* returns the mouse button  1 => left button, 0 => right button*/
-    return(e? e.which: window.event.button);
-  }
-
-    
+*/

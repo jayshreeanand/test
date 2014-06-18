@@ -1,31 +1,109 @@
-var Field = function() {
-	this.currStatus = 'closed';
-	this.value = 0;
+
+var Field = function(row,col,rows,cols){
+	this.row = row;
+	this.col = col;
+	this.mine = false;
+	this.status = "closed"; //closed,open, flag, question
+	this.id = getIdFromRowCol(row,col,rows);
+	this.symbol = '';
+	this.count = 0;
 };
 
 
-Field.prototype.getStatus = function(){
-
-	return this.currStatus;
+Field.prototype.isMine = function(){
+	return this.mine;
 };
 
-Field.prototype.getValue = function(){
-	return this.value;
+Field.prototype.isOpen = function(){
+	return (this.status == "open");
 };
 
-Field.prototype.isMine = function(row, col) {
-	return( 'm' == this.value );
+Field.prototype.isFlag = function(){
+	return(this.status =="flag");
 };
 
-Field.prototype.isHole = function(row, col)
-{
-	return( 0 == this.value );
+Field.prototype.updateFieldView = function(type){
+	var classType;
+	var symbol = getSymbol(type);
+
+	var field = document.getElementById(this.id);
+	field.innerHTML = symbol;
+	console.log("type of type is "+ typeof type);
+	if(type == 0){
+		classType ="hollow";
+		field.innerHTML = '';
+	}
+	else if(type ==1 ){
+		classType = "one";
+	}
+	else if(type ==2 ){
+		classType = "two";
+	}
+	else if(typeof type == "number"){
+		classType = "number"
+	}
+	else{
+		classType = type;
+	}
+	field.className = classType;
 };
 
-Field.prototype.isFlag = function(row, col) {
-	return( 'flag' == this.currStatus );
+
+Field.prototype.getNextState = function(){
+	switch(this.status){
+
+		case "closed":
+			return "flag";
+		case "flag":
+			return "question";
+		case "question":
+			return "closed";
+
+	}
+
 };
-Field.prototype.isOpen = function(row, col) {
-	return( 'down' == this.currStatus );
+
+function getIdFromRowCol(row,col,totalRows){
+	return (((row-1) * totalRows) + col);
+//check here id should be between 1 and totalfields
+
+};
+
+function getSymbol(type){
+
+	switch(type){
+
+		case "mine":
+			return '✹';
+		break;
+
+		case "flag":
+			return '⚑';
+		break;
+
+		case "blast":
+			return '✹';
+		break;
+
+		case "question":
+			return "?";
+		break;
+		case "cross":
+			return "✕";
+		break;
+			case "closed":
+		return '';
+		break;
+		case "open":
+			return '';
+		break;
+
+		default:
+		return  type;
+
+
+
+	}
+
 };
 

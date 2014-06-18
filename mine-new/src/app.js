@@ -1,35 +1,8 @@
+
 var Game = function(boardElement, userOptions){
 this.gameElement = boardElement;
 this.timerElement  = document.getElementById("timer");
 var game = this;
-this.movesArray = new Array();
-this.options = {
-
-	rows:10,
-	cols:10,
-	mineCount:10
-};
-this.startTime = null;
-this.timerElement.innerHTML = "00:00";
-//this.options = $.extend('',default,userOptions);
-
-
-
-    this.onMouseDown = function(e) {
-     
-      var obj = getMouseObject(e);
-      console.log("inside mouse down loop now");
-      if ( game.board.fieldIdExists(obj.id) ){
-
-        if(!game.startTime){
-            game.startTimer();
-
-
-        }
-       }
-
-    }
-
 
 
 
@@ -43,13 +16,6 @@ this.timerElement.innerHTML = "00:00";
         setTimeout(game.initTimer, 1000);
       }
     }
-
-    
-this.initGame();
- // this.startTimer();
- this.enableClickListenernew();
-
-
 
 
 };
@@ -72,6 +38,14 @@ Game.prototype.enableClickListenernew = function() {
 
 	
   this.gameElement.click(function(event) {
+
+
+        if(!$game.startTime){
+            $game.startTimer();
+
+
+        }
+
 
   	if(event.which ==1){ //eliminates case for middle mouse button click
 
@@ -96,12 +70,6 @@ Game.prototype.enableClickListenernew = function() {
 
 
 
-  function getMouseObject(e) {
-
-    /* returns the mouse target element*/
-    return(e? e.target: window.event.srcElement);
-  }
-
 
   Game.prototype.startTimer = function(){
     this.startTime = new Date().getTime();
@@ -118,14 +86,53 @@ Game.prototype.enableClickListenernew = function() {
     };
 
 Game.prototype.start = function(){
+this.options = this.getUserOptions();
+this.startTime = null;
+this.timerElement.innerHTML = "00:00";
+this.movesArray = new Array();
+
+this.initGame();
+ // this.startTimer();
+ this.enableClickListenernew();
+
 
 
 };
 
 Game.prototype.restart = function(){
-
+	console.log("inside restart");
+this.gameElement.empty();
+this.start();
 };
 
+Game.prototype.getUserOptions = function(){
+var difficulty = document.getElementById("difficulty-level").value;
+console.log("difficulty level is " + difficulty);
+
+switch(difficulty){
+
+	case "easy":
+	return [10,10,10]
+	break;
+
+	case "medium":
+	return [15,15,50]
+
+	break;
+
+	case "hard":
+	return [18,25,75];
+
+	break;
+
+	default:
+	return  [10,10,10];
+
+	break;
+
+}
+
+};
 
 Game.prototype.pause = function(){
 
@@ -147,9 +154,9 @@ this.board = new Board(boardElement, this.options);
 
 var Board = function(boardElement,options){
 this.element = boardElement;
-this.rows = options.rows;
-this.cols = options.cols;
-this.mineCount = options.mineCount;
+this.rows = options[0];
+this.cols = options[1];
+this.mineCount = options[2];
 this.flagCount = 0;
 this.createBoard();
 this.plantMines();

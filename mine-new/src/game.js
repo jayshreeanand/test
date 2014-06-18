@@ -2,7 +2,7 @@ var Game = function(boardElement){
   this.gameElement = boardElement;
   this.timerElement  = document.getElementById("timer");
   var game = this;
-$("#myModal").modal('show');
+// $("#myModal").modal('show');
   this.initTimer = function() {
     if (game.startTime) {
       var diff = Math.floor( ( new Date().getTime() - game.startTime) / 1000);
@@ -130,16 +130,16 @@ Game.prototype.getUserOptions = function(){
   switch(difficulty){
 
     case "easy":
-    return [10,10,10]
+    return [10,10,10];
     break;
 
     case "medium":
-    return [15,15,50]
+    return [15,15,50];
 
     break;
 
     case "hard":
-    return [18,25,75];
+    return [20,20,70];
 
     break;
 

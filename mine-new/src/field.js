@@ -6,7 +6,7 @@ var Field = function(row,col,rows,cols){
 	this.status = "closed"; //closed,open, flag, question
 	this.id = getIdFromRowCol(row,col,rows);
 	this.symbol = '';
-	this.count = 0;
+	this.mineCount = 0;
 };
 
 
@@ -28,7 +28,7 @@ Field.prototype.updateFieldView = function(type){
 
 	var field = document.getElementById(this.id);
 	field.innerHTML = symbol;
-	console.log("type of type is "+ typeof type);
+	console.log("type of type is "+ typeof type +"and type value is " +type);
 	if(type == 0){
 		classType ="hollow";
 		field.innerHTML = '';
@@ -54,20 +54,18 @@ Field.prototype.getNextState = function(){
 
 		case "closed":
 			return "flag";
+		break;
 		case "flag":
 			return "question";
+		break;
 		case "question":
 			return "closed";
+		break;
 
 	}
 
 };
 
-function getIdFromRowCol(row,col,totalRows){
-	return (((row-1) * totalRows) + col);
-//check here id should be between 1 and totalfields
-
-};
 
 function getSymbol(type){
 

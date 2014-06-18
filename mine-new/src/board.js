@@ -52,32 +52,11 @@ return true;
 };
 
 
-Board.prototype.openField = function(row,col){
 
-  this.field[row][col].status = "open";
-  if(this.field[row][col].isMine()){
-    //game over
-      this.field[row][col].updateFieldView("blast");
-      //trigger other gameover events here
-      this.gameOverSolve(row,col);
-      //minesweeper.gameOver(); //minesweeper is global uncomment this line
-
-  }else{
-
-  if(this.field[row][col].mineCount == 0)
-    {
-      //this.openConnectedEmptyFields(row,col);
-    this.field[row][col].updateFieldView(this.field[row][col].mineCount);
-    } else{
-      this.field[row][col].updateFieldView(this.field[row][col].mineCount);
-    }
-  }
-
-};
 
 Board.prototype.createBoard = function(){
   var html ='';
-  var type= "closed";
+  // var type= "closed";
   this.field = new Array(this.rows);
   for( var i =1 ; i<= this.rows ; i++){
 
@@ -87,7 +66,7 @@ Board.prototype.createBoard = function(){
     for( var j=1; j<= this.cols; j++){
 
       this.field[i][j] = new Field(i, j,this.rows,this.cols);
-      html+= '<span class="' + type + '" id="'+this.field[i][j].id+'">'+this.field[i][j].symbol+'</span>'
+      html+= '<span class="' + this.field[i][j].status + '" id="'+this.field[i][j].id+'">'+this.field[i][j].symbol+'</span>'
     }
     html += '</div>';
   }
@@ -143,6 +122,52 @@ for(var i =1; i <= this.rows; i++){
   }
 
 };
+Board.prototype.clickField  = function(id, typeofButton){
+  coord = this.getRowColFromId(id);
+
+if(typeofButton ==1 ){ //left click
+  this.openField(coord.row, coord.col);
+  return false;
+}
+else if(typeofButton ==3 ){
+  coord = this.getRowColFromId(id);
+  console.log("coordinates of field clicked"+ coord.row+ "and "+ coord.col);
+//this.field[coord.row][coord.col].updateFieldView("flag");
+if(this.field[coord.row][coord.col].isOpen()){
+  return false;
+}else
+{
+  this.changeState(coord.row,coord.col);
+  return false;
+}
+}
+
+};
+
+Board.prototype.openField = function(row,col){
+  var id = getIdFromRowCol(row,col,this.rows); //not needed
+  console.log("id is "+ id + " row is "+ row + "col is "+ col);
+  this.field[row][col].status = "open";
+  if(this.field[row][col].isMine()){
+    //game overteFieldView("blasrit");
+      //trigger other gameover events here
+      this.gameOverSolve(row,col);
+      minesweeper.gameOver(); //minesweeper is global uncomment this line
+
+  }else{
+
+  if(this.field[row][col].mineCount ==0) //this contains no surrounding mines
+    {
+    //this.field[row][col].updateFieldView(this.field[row][col].mineCount);
+      this.openConnectedEmptyFields(row,col);
+    
+    } else{
+      this.field[row][col].updateFieldView(this.field[row][col].mineCount);
+    }
+  }
+
+};
+
 
 Board.prototype.solve = function(){
 
@@ -198,37 +223,21 @@ this.field[row][col].updateFieldView("blast");  //this is the mine that got blas
 
 };
 
-Board.prototype.clickField  = function(id, typeofButton){
-  coord = this.getRowColFromId(id);
 
-if(typeofButton ==1 ){ //left click
-  this.openField(coord.row, coord.col);
-
-}
-else if(typeofButton ==3 ){
-  coord = this.getRowColFromId(id);
-//this.field[coord.row][coord.col].updateFieldView("flag");
-if(this.field[coord.row][coord.col].isOpen()){
-  return false;
-}else
-{
-  this.changeState(coord.row,coord.col);
-
-}
-}
-
-};
 
 Board.prototype.openConnectedEmptyFields = function(currRow,currCol){
-
+var id ;
   this.field[currRow][currCol].updateFieldView(this.field[currRow][currCol].mineCount);
 
   var neighbours = [[0,1],[1,0],[-1,0],[0,-1],[1,1],[-1,-1],[-1,1],[1,-1]];
   for(var z = 0; z < neighbours.length ; z++){
+    id = '';
     row = currRow + neighbours[z][0];
     col = currCol + neighbours[z][1];
-    if(this.fieldExists(row,col)){ //check if a field with that particular coordinates fieldExists
-        this.openField(row,col);
+    if(this.fieldExists(row,col) && this.field[row][col].status =="closed"){ //check if a field with that particular coordinates fieldExists
+        id = getIdFromRowCol(row,col,this.rows);
+        this.clickField(id,1);
+        console.log("empty field neighbour row col is" + row +"col is "+ col);
 
       }
     }
@@ -245,7 +254,7 @@ Board.prototype.fieldExists = function(row,col){
 };
 
 Board.prototype.fieldIdExists = function(id){
-  var maxId = this.getIdFromRowCol(this.rows,this.cols);
+  var maxId = this.rows * this.cols;  
   if(id >0 && id <= maxId){
     return true;
   }
@@ -253,9 +262,11 @@ Board.prototype.fieldIdExists = function(id){
 
 };
 
+
 Board.prototype.changeState = function(row,col){
   var change =  this.field[row][col].getNextState();
-
+console.log("current state is "+ this.field[row][col].status);
+console.log("new status is "+ change);
   if( (change =="flag") && (this.flagCount == this.mineCount)  ){
     return; // Don't allow more number of flags than the minecount
   }
@@ -271,9 +282,6 @@ Board.prototype.changeState = function(row,col){
 
 };
 
-Board.prototype.triggerEndGame = function(){
-  minesweeper.winGame();
-};
 
 
 Board.prototype.getRowColFromId = function(id){
@@ -313,4 +321,10 @@ Board.prototype.generateRandomNoArray = function(){
 function randomNumber(min,max) {
 
   return (Math.round((max-min) * Math.random() + min));
+}
+
+function getIdFromRowCol(row,col,totalRows){
+  return (((row-1) * totalRows) + col);
+//check here id should be between 1 and totalfields
+
 }

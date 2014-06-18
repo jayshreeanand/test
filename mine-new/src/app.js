@@ -20,9 +20,26 @@ var game = this;
 
 };
 
+Game.prototype.checkWinGame = function(){
+	if(this.board.matchFlagsMines){
+		this.winGame();
+
+	}
 
 
-Game.prototype.enableClickListenernew = function() {
+
+};
+
+
+  Game.prototype.winGame = function() {
+  //win game message here
+  window.setTimeout(function() { window.alert ('You Win!');}, 100);
+  this.board.showFlags();
+  this.endGame();
+
+
+  }
+Game.prototype.enableClickListener = function() {
 	var id, typeofButton;
 	var $game = this;
 
@@ -78,12 +95,7 @@ Game.prototype.enableClickListenernew = function() {
 
   };
     
-  Game.prototype.enableClickListener = function() {
-  	console.log("inside enable clicke listener funciton00");
-      this.board.element.onmousedown   = this.onMouseDown;
-      console.log("enable clicke listesten line 2");
-      this.board.element.oncontextmenu = function(){return false;};
-    };
+
 
 Game.prototype.start = function(){
 this.options = this.getUserOptions();
@@ -93,7 +105,7 @@ this.movesArray = new Array();
 
 this.initGame();
  // this.startTimer();
- this.enableClickListenernew();
+ this.enableClickListener();
 
 
 
@@ -104,6 +116,26 @@ Game.prototype.restart = function(){
 this.gameElement.empty();
 this.start();
 };
+
+  Game.prototype.disableClickListener = function() {
+ 	
+  this.gameElement.contextmenu(function(e) {
+	  	return false;
+ });
+    };
+
+
+  Game.prototype.stopTimer = function(){
+
+  this.startTime = null;
+
+  }
+
+    Game.prototype.updateRemainingMinesCount = function() {
+
+    document.getElementById("remaining-mines").innerHTML = String(this.board.mineCount - this.board.flags);
+  }
+
 
 Game.prototype.getUserOptions = function(){
 var difficulty = document.getElementById("difficulty-level").value;
@@ -161,20 +193,9 @@ this.flagCount = 0;
 this.createBoard();
 this.plantMines();
 this.calculateFieldCount();	
-// this.solve();
-this.openField(2);
-this.openField(10);
-
-this.openField(19);
-
-this.openField(77);
-
-this.openField(100);
-
-this.openField(50);
+//this.solve();
 
 this.updateRemainingMineCount();
-this.enableClickListeners();
 };
 
 Board.prototype.updateRemainingMineCount = function(){
@@ -185,16 +206,46 @@ return;
 
 };
 
-Board.prototype.enableClickListeners = function(){
+Board.prototype.showFlags = function(){
+	for(var i = 1; i<= this.rows; i++){
+
+		for(var j=1; j<=this.cols; j++){
+
+			if(this.field[i][j].isMine && (!this.field[i][j].isFlag)){
+
+				//reveal the flag here (set field to flag)
+			}
+		}
+	}
 
 
 };
 
-function genRandNoArray(){
 
 
-};
 
+
+
+
+
+    Board.prototype.matchFlagsMines = function() {
+
+    	for(var i =1; i<= this.rows; i++){
+
+    		for(var j=1; j<=this.cols; j++){
+
+    			if(this.field[i][j].isFlag() && !(this.flag[i][j].isMine())){ //marked as flag but not a mine
+
+    				return false;
+
+    			}
+
+    		}
+    	}
+    	return true;
+
+
+    }
 
 Game.prototype.logMoves = function(id, typeofButton){
 this.movesArray.push([id,typeofButton]);
@@ -206,10 +257,8 @@ Game.prototype.deleteLastMove = function(){
 
 this.movesArray.pop();
 };
-Board.prototype.openField = function(id){
-var coord = this.getRowColFromId(id);
-var row = coord.row;
-var col = coord.col;
+Board.prototype.openField = function(row,col){
+
 
 if(this.field[row][col].isMine()){
 	//game over
@@ -218,7 +267,21 @@ if(this.field[row][col].isMine()){
 
 }else{
 
+
+
+	if(this.field[row][col].mineCount == 0)
+{
+	//this.openConnectedEmptyFields(row,col);
 	this.field[row][col].updateFieldView(this.field[row][col].mineCount);
+
+
+} else{
+	this.field[row][col].updateFieldView(this.field[row][col].mineCount);
+
+
+}
+
+
 }
 
 };
@@ -249,7 +312,7 @@ html += '</div>';
 Board.prototype.plantMines = function(){
 
 var row, col, coord;
-var mineLoc = [2,10,19,56,99,100];
+var mineLoc = this.generateRandomNoArray();
 for(var i =0 ; i< mineLoc.length; i++){
 row = '';
 col ='';
@@ -333,19 +396,51 @@ for(var i = 1; i <= this.rows; i++){
 
 };
 
+
+Board.prototype.gameOverSolve = function(){
+
+
+
+};
+
 Board.prototype.clickField	= function(id, typeofButton){
+	coord = this.getRowColFromId(id);
 
 if(typeofButton ==1 ){ //left click
-this.openField(id);
+this.openField(coord.row, coord.col);
 
 }
 else if(typeofButton ==3 ){
 coord = this.getRowColFromId(id);
-this.field[coord.row][coord.col].updateFieldView("flag");
-
+//this.field[coord.row][coord.col].updateFieldView("flag");
+this.changeState(coord.row,coord.col);
 }
 
 };
+
+Board.prototype.openConnectedEmptyFields = function(currRow,currCol){
+
+	this.field[currRow][currCol].updateFieldView(this.field[currRow][currCol].mineCount);
+
+	var neighbours = [[0,1],[1,0],[-1,0],[0,-1],[1,1],[-1,-1],[-1,1],[1,-1]];
+	for(var z = 0; z < neighbours.length ; z++){
+			console.log("inside neightbour loop" + z);
+			row = currRow + neighbours[z][0];
+			col = currCol + neighbours[z][1];
+			if(this.fieldExists(row,col)){ //check if a field with that particular coordinates fieldExists
+
+				
+					this.openField(row,col);
+				
+			}
+
+			
+
+		}
+
+};
+
+
 Board.prototype.fieldExists = function(row,col){
 
 			if((row >0 && row <=this.rows ) &&(col>0 && col <= this.cols)){
@@ -369,13 +464,57 @@ var Field = function(row,col,rows,cols){
 	this.row = row;
 	this.col = col;
 	this.mine = false;
-	this.status = closed; //closed,open, flag, question
+	this.status = "closed"; //closed,open, flag, question
 	this.mismatch = false; //mismatch between flag and mine
 	this.id = getIdFromRowCol(row,col,rows);
 	this.symbol = '';
 	this.count = 0;
 	
 };
+
+Board.prototype.changeState = function(row,col){
+var change =  this.field[row][col].getNextState();
+console.log("change vluae is" + change);
+
+if( (change =="flag") && (this.flagCount == this.mineCount)  ){
+	return; // Don't allow more number of flags than the minecount
+}
+else if(change =="flag"){
+
+	this.flagCount++;
+}
+else if(change == "question"){
+	this.flagCount--;
+}
+this.field[row][col].status = change;
+this.field[row][col].updateFieldView(change);
+
+};
+
+Field.prototype.getNextState = function(){
+switch(this.status){
+
+	case "closed":
+		return "flag";
+	case "flag":
+		return "question";
+	case "question":
+		return "closed";
+
+}
+
+};
+
+
+
+
+
+
+
+Field.prototype.isFlag = function(){
+
+	return(this.status =="flag");
+}
 Field.prototype.updateFieldView = function(type){
 
 var symbol = getSymbol(type);
@@ -389,6 +528,11 @@ Field.prototype.isMine = function(){
 
 return this.mine;
 
+}
+
+Field.prototype.hasZeroMineCount = function(){
+
+	return(this.mineCount == 0);
 }
 function getIdFromRowCol(row,col,totalRows){
 
@@ -435,6 +579,12 @@ switch(type){
 	case "cross":
 		return "✕";
 	break;
+	case "closed":
+		return '';
+	break;
+	case "open":
+		return '';
+	break;
 	default:
 		return type;
 
@@ -460,3 +610,25 @@ function countTimer()
    $("#elapsed-time").html(minute+":"+second);
 }
 
+// RETURNS PSEUDO-RANDOM NUMBER IN RANGE min...max
+function randomNumber(min,max) {
+
+    return (Math.round((max-min) * Math.random() + min));
+}
+
+
+Board.prototype.generateRandomNoArray = function(){
+
+var arr = [];
+var max = this.rows * this.cols;
+var min = 1;
+while(arr.length < this.mineCount){
+  var randomnumber=Math.round((max-min) * Math.random() + min)
+  var found=false;
+  for(var i=0;i<arr.length;i++){
+    if(arr[i]==randomnumber){found=true;break}
+  }
+  if(!found)arr[arr.length]=randomnumber;
+}
+return arr;
+}
